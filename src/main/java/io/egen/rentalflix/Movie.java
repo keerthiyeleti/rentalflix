@@ -10,6 +10,13 @@ private String id;
 private String title;
 private int year;
 private String language;
+public Movie(String id,String title,int year,String language)
+{
+	this.id=id;
+	this.title=title;
+	this.year=year;
+	this.language=language;
+}
 
 public String getId() {
 	return id;
