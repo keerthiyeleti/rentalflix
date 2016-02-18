@@ -1,5 +1,7 @@
 package io.egen.rentalflix;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -7,39 +9,55 @@ import java.util.List;
  * You can use any Java collection type to store movies
  */
 public class MovieService implements IFlix {
+ 
+	ArrayList<Movie> movieList = new ArrayList<Movie>();
 
 	@Override
 	public List<Movie> findAll() {
-		// TODO Auto-generated method stub
+	
 		return null;
 	}
 
+
 	@Override
 	public List<Movie> findByName(String name) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	@Override
 	public Movie create(Movie movie) {
-		// TODO Auto-generated method stub
-		return null;
+		movieList.add(movie);
+		return movie;
 	}
 
 	@Override
 	public Movie update(Movie movie) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	@Override
-	public Movie delete(int id) {
-		// TODO Auto-generated method stub
-		return null;
+	public Movie delete(String id)
+	{
+		Movie m=null;
+		Iterator<Movie> i=movieList.listIterator();
+		while(i.hasNext())
+		{
+			m=i.next();
+			if(id==m.getId())
+			{
+				movieList.remove(m);
+				break;
+			}
+		}
+		
+		return m;
+			
 	}
 
 	@Override
-	public boolean rentMovie(int movieId, String user) {
+	public boolean rentMovie(String movieId, String user) {
 		// TODO Auto-generated method stub
 		return false;
 	}
