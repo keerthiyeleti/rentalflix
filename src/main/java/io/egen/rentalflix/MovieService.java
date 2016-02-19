@@ -9,81 +9,128 @@ import java.util.List;
  */
 public class MovieService implements IFlix {
  
-	ArrayList<Movie> movieList = new ArrayList<Movie>();
+	ArrayList<Movie> movieStore = new ArrayList<Movie>();
 	
 
 	@Override
 	public List<Movie> findAll() {
 	
-		return movieList;
+		return movieStore;
 	}
 
-
+	/**
+	 * Finds all movies in the movie store which contains <strong>name</strong> in the title
+	 * @param name String
+	 * @return list of movies or empty list
+	 */
 	@Override
 	public List<Movie> findByName(String name) {
-		ArrayList<Movie> m = new ArrayList<Movie>();
-		for(Movie i:movieList){
-			if(i.getTitle()==name)
-			{
-				m.add(i);
-			}
-		}		
-		return m;
-	}
-
-	@Override
-	public Movie create(Movie movie) {
-		movieList.add(movie);
-		return movie;
-	}
-
-	@Override
-	public  Movie update(Movie movie) {
-		int c=0;
-		for(Movie m: movieList)
-		{
-			if(movie.getId()==m.getId())
-			{
-				movieList.add(movie);
-				c++;
+		ArrayList<Movie> resultSet = new ArrayList<Movie>();
+		Iterator<Movie> ms=movieStore.listIterator();
+		Movie temp=null;
+		while(ms.hasNext()) 
+		{  
+			temp=ms.next();
+			if(name==temp.getTitle())
+			{   
+				resultSet.add(temp); // Add Matched movies to the list
 			}
 			
 		}
-	
-		if(c==0)
-			throw new IllegalArgumentException();
-		return movie;
-		}
-	
-	
+		return resultSet;  // Movie store empty or Movie is not found
+	}
 
+	
+	/**
+	 * Create a new movie in the movie store
+	 * @param movie
+	 * @return Movie
+	 */
 	@Override
-	public Movie delete(String id)
-	{
-		Movie m=null;
-		Iterator<Movie> i=movieList.listIterator();
-		l1:while(i.hasNext())
-		{
-			m=i.next();
-			if(id==m.getId())
-			{
-				movieList.remove(m);
-				break l1;
-			}
-			if(i.next()==null)
-				throw new IllegalArgumentException();
+	public Movie create(Movie movie) {
+		
+		if(findById(movie.getId()) == null){ // Check if the Movie is new and Add it
+			movieStore.add(movie);
+			return movie;
 		}
-		return m;
+		return findById(movie.getId()); // Return the existing Movie
 		
 		
 	}
 
+	
+	/**
+	 * Update an existing movie
+	 * @param movie
+	 * @return updated movie or throws <strong>IllegalArgumentException</strong> if movie with this id is not found
+	 */
+	@Override
+	public  Movie update(Movie movie) {
+		
+		if(findById(movie.getId()) != null){ // Movie with this Id found
+			movieStore.remove(movie); //Remove the existing
+			movieStore.add(movie);    //Add the updated Movie
+			return movie;
+		}
+		else{
+			 throw new IllegalArgumentException();
+		}
+			
+	}
+	
+	/**
+	 * Delete an existing movie 
+	 * @param id
+	 * @return deleted movie or throws <strong>IllegalArgumentException</strong> if movie with this id is not found
+	 */
+
+	@Override
+	public Movie delete(String id)
+	{  
+	   // Check if the Movie exists in Movie Store with this ID
+		Movie toRemove=findById(id);
+		
+		
+		if(toRemove!=null){ 
+			movieStore.remove(toRemove); // Delete the movie from the movie store list.
+			return toRemove;
+		}
+		else{
+			 throw new IllegalArgumentException();
+		}
+		
+		
+	}
+	
+	/**
+	 * Rent the movie with movieId to the <strong>user</strong>.
+	 * Make sure this movie is not rented already. 
+	 * If it is already rented, throw <strong>IllegalArgumentException</strong>
+	 * @param movieId
+	 * @param user
+	 * @return true: if movie can be rented, false otherwise
+	 */
 	@Override
 	public boolean rentMovie(String movieId, String user) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 	
+	public Movie findById(String id){
+		Movie temp=null;
+		Iterator<Movie> ms=movieStore.listIterator();
+		
+		while(ms.hasNext()) 
+		{  
+			temp=ms.next();
+			if(id==temp.getId())
+			{   
+				return temp; // Movie store list not empty and Movie is found
+			}
+			
+		}
+		return null;  // Movie store empty or Movie is not found
+	}
 	
 	
 }
