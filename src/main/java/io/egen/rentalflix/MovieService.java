@@ -12,6 +12,10 @@ public class MovieService implements IFlix {
 	ArrayList<Movie> movieStore = new ArrayList<Movie>();
 	
 
+	/**
+	 * Finds all available movies in the movie store
+	 * @return list of movies or empty list
+	 */
 	@Override
 	public List<Movie> findAll() {
 	
@@ -112,9 +116,31 @@ public class MovieService implements IFlix {
 	 */
 	@Override
 	public boolean rentMovie(String movieId, String user) {
-		// TODO Auto-generated method stub
-		return false;
+		Movie rental=findById(movieId);
+		
+		if(rental==null){ // Not an existing movie
+			throw new IllegalArgumentException();
+		}
+		if(rental.getIsRented()==Boolean.TRUE){
+			
+			return false; // Already Rented to someone
+			
+		}
+		else {
+			rental.setRentedUser(user);
+			rental.setIsRented(Boolean.TRUE);
+			return true; // Movie not rented.
+		}
 	}
+	
+	/**
+	 * Utilty method created to find the existance of movie in the Store
+	 * Used in other methods which are implementing IFLix interface
+	 * Make sure this movie is not rented already. 
+	 * If it is already rented, throw <strong>IllegalArgumentException</strong>
+	 * @param movieid
+	 * @return Movie if found, null if not found
+	 */
 	
 	public Movie findById(String id){
 		Movie temp=null;
