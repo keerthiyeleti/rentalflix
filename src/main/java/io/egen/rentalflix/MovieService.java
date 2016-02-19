@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class MovieService implements IFlix {
  
-	ArrayList<Movie> movieStore = new ArrayList<Movie>();
+	private ArrayList<Movie> movieStore = new ArrayList<Movie>();
 	
 
 	/**
@@ -30,12 +30,13 @@ public class MovieService implements IFlix {
 	@Override
 	public List<Movie> findByName(String name) {
 		ArrayList<Movie> resultSet = new ArrayList<Movie>();
+		
 		Iterator<Movie> ms=movieStore.listIterator();
 		Movie temp=null;
 		while(ms.hasNext()) 
 		{  
 			temp=ms.next();
-			if(name==temp.getTitle())
+			if(temp.getTitle().contains(name))
 			{   
 				resultSet.add(temp); // Add Matched movies to the list
 			}
@@ -53,11 +54,13 @@ public class MovieService implements IFlix {
 	@Override
 	public Movie create(Movie movie) {
 		
-		if(findById(movie.getId()) == null){ // Check if the Movie is new and Add it
+		Movie newmovie=findById(movie.getId());
+		
+		if( newmovie== null){ // Check if the Movie is new and Add it
 			movieStore.add(movie);
 			return movie;
 		}
-		return findById(movie.getId()); // Return the existing Movie
+		return newmovie; // Return the existing Movie
 		
 		
 	}
@@ -71,9 +74,12 @@ public class MovieService implements IFlix {
 	@Override
 	public  Movie update(Movie movie) {
 		
-		if(findById(movie.getId()) != null){ // Movie with this Id found
-			movieStore.remove(movie); //Remove the existing
-			movieStore.add(movie);    //Add the updated Movie
+		Movie existing=findById(movie.getId());
+		if( existing != null){ // Movie with this Id found
+			movieStore.remove(existing);
+			movieStore.add(movie);
+			
+			
 			return movie;
 		}
 		else{
@@ -134,10 +140,8 @@ public class MovieService implements IFlix {
 	}
 	
 	/**
-	 * Utilty method created to find the existance of movie in the Store
+	 * Utility method created to find the existence of movie in the Store
 	 * Used in other methods which are implementing IFLix interface
-	 * Make sure this movie is not rented already. 
-	 * If it is already rented, throw <strong>IllegalArgumentException</strong>
 	 * @param movieid
 	 * @return Movie if found, null if not found
 	 */

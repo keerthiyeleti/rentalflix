@@ -20,6 +20,7 @@ public Movie(String id,String title,int year,String language)
 	this.year=year;
 	this.language=language;
 	this.setIsRented(Boolean.FALSE);
+	this.setRentedUser(null);
 }
 
 public String getId() {
@@ -63,6 +64,10 @@ public void setRentedUser(String rentedUser) {
 	this.rentedUser = rentedUser;
 }
 
-	
+@Override
+public String toString() {
+	return " \n  Movie ID   :" + this.id + "\n  Title      :" + this.title + "\n  Language   :" + this.language + 
+			"\n  Year       :"+this.year+"\n  IsRented   :"+ this.isRented+"\n  RentedUser :"+this.rentedUser;
+} 
 	
 }
